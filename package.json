@@ -147,7 +147,7 @@
 		}
 	},
 	"eslintConfig": {
-		"extends": "./config/.eslintrc.js"
+		"extends": "./config/.eslintrc.json"
 	},
 	"lint-staged": {
 		"*.js": [

@@ -44,7 +44,7 @@
 		],
 		"comma-dangle": [
 			"warn",
-			"always-multiline",
+			"always-multiline"
 		],
 		"no-tabs": [
 			"warn",

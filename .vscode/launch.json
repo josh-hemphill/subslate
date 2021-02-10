@@ -12,32 +12,25 @@
 				"--inspect-brk",
 				"${workspaceFolder}/node_modules/jest/bin/jest.js",
 				"-c",
-				"config/jest.config.js",
+				"config/jest.config.ts",
 				"--runInBand",
 				"--detectOpenHandles",
 				"--bail",
-				"type"
+				"index"
+			],
+			"skipFiles": [
+				"<node_internals>/**",
+				"**/node_modules/**"
+			],
+			"cwd": "${workspaceRoot}",
+			"resolveSourceMapLocations": [
+				"${workspaceFolder}/**",
+				"!**/node_modules/**"
 			],
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
+			"disableOptimisticBPs": true,
 			"port": 9229
 		},
-		{
-			"name": "Build Release",
-			"type": "node",
-			"request": "launch",
-			"console": "integratedTerminal",
-			"internalConsoleOptions": "neverOpen",
-			"runtimeArgs": [
-				"--inspect-brk",
-				"./release",
-				"-d"
-			],
-			"port": 9229,
-			"skipFiles": [
-				"${workspaceRoot}/node_modules/**/*.js",
-				"<node_internals>/**/*.js"
-			]
-		}
 	]
 }

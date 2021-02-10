@@ -1,5 +1,4 @@
 {
-	"cSpell.userWords": [], // only use words from .cspell.json
 	"cSpell.enabled": true,
 	"editor.formatOnSave": true,
 	"typescript.tsdk": "node_modules/typescript/lib",
@@ -7,4 +6,9 @@
 	"[typescript]": {
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	},
+	"cSpell.import": [
+		"${workspaceFolder}/config/cspell.json"
+	],
+	"jest.pathToConfig": "config/jest.config.ts",
+	"jest.autoEnable": false
 }

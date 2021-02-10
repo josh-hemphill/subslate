@@ -39,6 +39,9 @@ export default [
 				browserslist: false,
 				tsconfig: 'tsconfig.json',
 				tsconfigOverride: {
+					"exclude": [
+						'**/*.test.*'
+					],
 					compilerOptions: {
 						rootDir: './src/lib',
 					},

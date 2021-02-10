@@ -38,7 +38,7 @@
 			"warn",
 			"unix"
 		],
-		"indent": [
+		"@typescript-eslint/indent": [
 			"warn",
 			"tab"
 		],
@@ -66,6 +66,16 @@
 	},
 	"parserOptions": {
 		"ecmaVersion": 2020,
-		"project": "./tsconfig.json"
-	}
+		"project": "tsconfig.json"
+	},
+	"overrides": [
+		{
+			"files": [
+				"**/*test*"
+			],
+			"rules": {
+				"@typescript-eslint/ban-ts-comment": "off"
+			}
+		}
+	]
 }

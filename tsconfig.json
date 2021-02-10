@@ -4,7 +4,6 @@
 		"checkJs": false,
 		"incremental": true,
 		"target": "es2017",
-		"rootDir": "src",
 		"moduleResolution": "node",
 		"module": "commonjs",
 		"declaration": true,
@@ -51,8 +50,8 @@
 	],
 	"exclude": [
 		"node_modules/**",
-		"src/**/*test*",
-		"test/**"
+		"test/**",
+		"coverage",
 	],
 	"compileOnSave": false
 }

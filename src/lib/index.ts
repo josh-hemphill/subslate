@@ -22,7 +22,7 @@ export const getSeparators = (escapeSep: Options['escapeSep']): escapedSep => {
 };
 
 export const subslate = (text: string,context: Record<string|number,unknown>, options?: Partial<Options> | undefined): string => {
-	const localOpts = isObj(options) ? options : {}
+	const localOpts = isObj(options) ? options : {};
 	const defaultedOptions = getDefaultOptions(localOpts);
 	const {
 		startStopPairs,
@@ -39,7 +39,7 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 	for (const res of iter(execSearcher,[],reset)) {
 		if (res !== null) {
 			const {index} = res;
-			const [match, content] = res.filter(v => typeof v === 'string')
+			const [match, content] = res.filter(v => typeof v === 'string');
 			if (!match && !searcher.lastIndex) break;
 			if(!cache.has(match)) {
 				cache.set(match, {
@@ -61,7 +61,7 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 			item.value = lContext.getContextVal(item,separators,defaultedOptions);
 		}
 		for (const ind of item.indexes) {
-			const value = String(item.value || '')
+			const value = String(item.value || '');
 			localStr.splice(ind + indexOffset,match.length, ...value);
 			indexOffset += (value.length - match.length);
 		}

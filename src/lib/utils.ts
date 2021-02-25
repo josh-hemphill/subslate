@@ -31,7 +31,7 @@ export function regReset(reg: RegExp): void {
 export const isObj = (obj: unknown): obj is obj => !!obj && typeof obj === 'object' && obj !== null && Object.keys(obj).every(v => typeof v !== 'symbol');
 
 
-export function hasOwnProperty<X extends object, Y extends PropertyKey>
-  (obj: X, prop: Y): obj is X & Record<Y, unknown> {
-  return Object.prototype.hasOwnProperty.call(obj,prop)
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function hasOwnProperty<X extends object, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> {
+	return Object.prototype.hasOwnProperty.call(obj,prop);
 }

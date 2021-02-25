@@ -7,7 +7,7 @@ const config: Config.InitialOptions = {
 	testEnvironment: 'node',
 	moduleFileExtensions: ['ts', 'js'],
 	'testMatch': [
-		'**/*.test.[tj]s',
+		'**/src/**/*.test.[tj]s',
 	],
 	'transform': {
 		...jsWithTs.transform,

@@ -38,9 +38,11 @@
 			"warn",
 			"unix"
 		],
+		"indent": "off",
 		"@typescript-eslint/indent": [
 			"warn",
-			"tab"
+			"tab",
+			{}
 		],
 		"comma-dangle": [
 			"warn",
@@ -75,6 +77,17 @@
 			],
 			"rules": {
 				"@typescript-eslint/ban-ts-comment": "off"
+			}
+		},
+		{
+			"files": [
+				"*.yml"
+			],
+			"rules": {
+				"@typescript-eslint/indent": [
+					"warn",
+					"2"
+				]
 			}
 		}
 	]

@@ -1,0 +1,18 @@
+{
+  "[javascript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "eslint.enable": false,
+  "deno.enable": true,
+  "deno.import_intellisense_origins": {
+    "https://deno.land": true
+  },
+  "deno.import_map": "build/import-map.json",
+  "deno.importMap": "build/import-map.json",
+  "deno.unstable": true,
+  "deno.import_intellisense_autodiscovery": true,
+  "deno.lint": true
+}

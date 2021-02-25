@@ -47,3 +47,8 @@ export type escapedSep = {
 	backt: string[];
 }
 export type obj = Record<string|number, unknown>
+
+export type sepNames = 'per' | 'opBrac' | 'clBrac' | 'quote' | 'apos' | 'backt'
+export type separators = {
+	[K in sepNames]: string[];
+}

@@ -1,4 +1,5 @@
-import { EscapeTypeFlags, escapeNames} from './typing';
+import type { EscapeTypeFlags, escapeNames} from './typing';
+import { hasOwnProperty } from './utils';
 
 const JS_DICT = {
 	'\'': '\'',
@@ -8,7 +9,7 @@ const JS_DICT = {
 	'[':'[',
 	']':']',
 };
-const jsonDef = (v: string) => JS_DICT[v] || v;
+const jsonDef = (v: (keyof typeof JS_DICT) | string) => hasOwnProperty(JS_DICT,v) ? JS_DICT[v] : v;
 const HTML_DICT = {
 	'.': ['&period;'],
 	'\\':['&#x27;'],
@@ -17,7 +18,7 @@ const HTML_DICT = {
 	'[': ['&lsqb;'],
 	']': ['&rsqb;'],
 };
-const htmlDef = (v: string) => HTML_DICT[v] || v;
+const htmlDef = (v: (keyof typeof HTML_DICT) | string) => hasOwnProperty(HTML_DICT,v) ? HTML_DICT[v] : v;
 const toJsUni = (code: number) => `\\u${Number.prototype.toString.call(code,16).toUpperCase()}`;
 const toHTMLUni = (code: number) => `&#x${Number.prototype.toString.call(code,16).toUpperCase()};`;
 const getUnicode = (str: string,type: 'js' | 'html') => [...str].map(v => v.split('').map(x => ({
@@ -37,7 +38,7 @@ export const toEscapes: {
 export const toAllEscapes = (identifier: string, flags: EscapeTypeFlags): string[] => {
 	const escaped = new Set<string>();
 	for (const k in flags) {
-		if (toEscapes[k]) toEscapes[k](identifier).forEach((v:string) => escaped.add(v));
+		if (Object.prototype.hasOwnProperty.call(toEscapes,k)) toEscapes[k](identifier).forEach((v:string) => escaped.add(v));
 	}
 	return Array.from(escaped);
 };

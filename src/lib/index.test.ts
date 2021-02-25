@@ -1,9 +1,14 @@
 import { subslate } from './index';
-import { strPairs } from './typing';
+import type { strPairs } from './typing';
+import { hasOwnProperty } from './utils';
 
 describe('subslate()',()=> {
 	it('Performs basic replacement',() => {
 		const result = subslate('${x}',{x:'hello'},{});
+		expect(result).toBe('hello');
+	});
+	it('Allows no 3rd arg',() => {
+		const result = subslate('${x}',{x:'hello'});
 		expect(result).toBe('hello');
 	});
 	it('Replaces multiple',() => {
@@ -54,8 +59,15 @@ describe('subslate()',()=> {
 		expect(result).toBe('hello world, hi');
 	});
 	it('Uses cache for subsequent matches',() => {
-		const sanitizer = jest.fn((v) =>
-			v.isEmpty === true ? 'undefined' : String(v.value));
+		const sanitizer = jest.fn((v: unknown) => {
+			let val = 'undefind';
+			if (typeof v === 'object'
+				&& hasOwnProperty(v,'isEmpty')
+				&& v.isEmpty !== true) {
+				if (hasOwnProperty(v,'value')) val = String(v.value);
+			}
+			return val;
+		});
 		const result = subslate('${x} world, ${x}',{x:'hello'},{
 			sanitizer,
 		});

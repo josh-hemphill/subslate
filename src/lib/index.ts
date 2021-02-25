@@ -1,13 +1,13 @@
 import { Context } from './context';
 import { toAllEscapes } from './escapes';
-import { Options,cacheObj, strPairs, escapedSep } from './typing';
-import { iter, defaulted,regReset, escapeRegExp } from './utils';
+import type { Options,cacheObj, strPairs, escapedSep } from './typing';
+import { iter, defaulted,regReset, escapeRegExp, isObj } from './utils';
 interface DefaultedOptions extends Options {
 	startStopPairs: strPairs[]
 }
 export const getDefaultOptions = (options: Partial<Options>): DefaultedOptions => ({
 	startStopPairs: defaulted(options.startStopPairs,['${','}'],'Invalid startStopPairs'),
-	escapeSep: options.escapeSep,
+	escapeSep: typeof options.escapeSep === 'undefined' ? false : options.escapeSep,
 	allowUnquotedProps: !!options.allowUnquotedProps,
 	allowRootBracket: !!options.allowRootBracket,
 	sanitizer: options.sanitizer || ((v) =>
@@ -22,20 +22,25 @@ export const getSeparators = (escapeSep: Options['escapeSep']): escapedSep => {
 };
 
 export const subslate = (text: string,context: Record<string|number,unknown>, options?: Partial<Options> | undefined): string => {
-	const defaultedOptions = getDefaultOptions(options);
+	const localOpts = isObj(options) ? options : {}
+	const defaultedOptions = getDefaultOptions(localOpts);
 	const {
 		startStopPairs,
 		escapeSep,
 		maxNameLength,
 	} = defaultedOptions;
 	const filteredPairs = startStopPairs.filter(v => text.includes(v[0]) && text.includes(v[1])).map(v =>
-		[escapeRegExp(v[0]),escapeRegExp(v[1])]);
+		[escapeRegExp(v[0]),escapeRegExp(v[1])]).map(([v1,v2]) =>
+		`(?:${v1}\\s*([\\s\\S]{0,${maxNameLength}}?)\\s*${v2})`);
 	const cache = new Map<string,cacheObj>();
-	for (const [startStr,endStr] of filteredPairs) {
-		const searcher = RegExp(`${startStr}\\s*([\\s\\S]{0,${maxNameLength}}?)\\s*${endStr}`,'g');
-		const reset = () => regReset(searcher);
-		const execSearcher = () => searcher.exec(text);
-		for (const {index, 0: match, 1: content} of iter(execSearcher,[],reset)) {
+	const searcher = RegExp(filteredPairs.join('|'),'g');
+	const reset = () => regReset(searcher);
+	const execSearcher = () => searcher.exec(text);
+	for (const res of iter(execSearcher,[],reset)) {
+		if (res !== null) {
+			const {index} = res;
+			const [match, content] = res.filter(v => typeof v === 'string')
+			if (!match && !searcher.lastIndex) break;
 			if(!cache.has(match)) {
 				cache.set(match, {
 					content,
@@ -43,7 +48,7 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 				});
 			} else {
 				const temp = cache.get(match);
-				temp.indexes.push(index);
+				if (temp) temp.indexes.push(index);
 			}
 		}
 	}
@@ -56,8 +61,9 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 			item.value = lContext.getContextVal(item,separators,defaultedOptions);
 		}
 		for (const ind of item.indexes) {
-			localStr.splice(ind + indexOffset,match.length, ...item.value);
-			indexOffset += (item.value.length - match.length);
+			const value = String(item.value || '')
+			localStr.splice(ind + indexOffset,match.length, ...value);
+			indexOffset += (value.length - match.length);
 		}
 	}
 	return localStr.join('');

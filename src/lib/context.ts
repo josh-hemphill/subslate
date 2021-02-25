@@ -1,11 +1,6 @@
-import { ContextOptions, cacheObj, obj } from './typing';
-import { escapeRegExp } from './utils';
+import type { ContextOptions, cacheObj, obj, separators } from './typing';
+import { escapeRegExp, isObj } from './utils';
 
-type sepNames = 'per' | 'opBrac' | 'clBrac' | 'quote' | 'apos' | 'backt'
-type separators = {
-	[K in sepNames]: string[];
-}
-const isObj = (obj: unknown): obj is obj => typeof obj !== 'object' && Object.keys(obj).every(v => typeof v !== 'symbol');
 const isBlank = Symbol('Blank Value');
 export class Context {
 	context: obj;
@@ -17,7 +12,7 @@ export class Context {
 		const con = this.context;
 		const {allowRootBracket,allowUnquotedProps,sanitizer} =options;
 		const {per,opBrac,clBrac,quote,apos,backt} = separators;
-		const quotes = [quote,apos,backt].flat().filter(v => id.includes(v)).map(v => escapeRegExp(v));
+		const quotes = [quote,apos,backt].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
 
 		function getRelative(funId: string, localContext: obj, startIndex = 0): [symbol|unknown,number]{
 			let result: unknown = isBlank;
@@ -48,7 +43,7 @@ export class Context {
 				}
 				if (startIndex !== 0 || allowRootBracket) {
 					const filteredBrackets = opBrac.map((v,i) => [v,clBrac[i]]).filter(v => funId.includes(v[0]) && funId.includes(v[1]));
-					let currentBrackets: [string,string] = null;
+					let currentBrackets: [string,string] | null = null;
 					for (const [open, close] of filteredBrackets) {
 						if (funId.startsWith(open,startIndex)) {
 							currentBrackets = [open, close];
@@ -77,7 +72,7 @@ export class Context {
 		let finResult: typeof isBlank | unknown = isBlank;
 
 		let curInd = 0;
-		for (;curInd < id.length;) {
+		for (;id?.length > curInd;) {
 			const localContext: obj | unknown = finResult === isBlank ? con : finResult;
 			if (!isObj(localContext)) break;
 			const [newfinResult,foundLength] = getRelative(id,localContext,curInd);

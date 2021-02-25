@@ -1,3 +1,3 @@
 # subslate
 
-a typescript-starter project
+A configurable template string replacement

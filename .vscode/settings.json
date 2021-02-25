@@ -10,5 +10,14 @@
 		"${workspaceFolder}/config/cspell.json"
 	],
 	"jest.pathToConfig": "config/jest.config.ts",
-	"jest.autoEnable": false
+	"jest.autoEnable": false,
+	"cSpell.words": [
+		"Styleguide",
+		"Subslate's",
+		"errored",
+		"markdownlint",
+		"pasteable",
+		"styleguides",
+		"typeof"
+	]
 }

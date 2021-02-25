@@ -1,2 +1,2 @@
-// @deno-types="./dist/valivar.esm.d.ts"
-export * from './dist/valivar.esm.js';
+// @deno-types="./dist/subslate.esm.d.ts"
+export * from './dist/subslate.esm.js';

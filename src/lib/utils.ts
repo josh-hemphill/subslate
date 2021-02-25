@@ -1,4 +1,4 @@
-import { strPairs } from './typing';
+import type { strPairs, obj } from './typing';
 
 export function iter<F extends(...args:unknown[])=>ReturnType<F>>(fn: F, inputs: unknown[],endFn?: CallableFunction): Iterable<ReturnType<F>> {return {
 	[Symbol.iterator]() {return {
@@ -28,4 +28,10 @@ export function escapeRegExp(text:string): string {
 export function regReset(reg: RegExp): void {
 	reg.lastIndex = 0;
 }
+export const isObj = (obj: unknown): obj is obj => !!obj && typeof obj === 'object' && obj !== null && Object.keys(obj).every(v => typeof v !== 'symbol');
 
+
+export function hasOwnProperty<X extends object, Y extends PropertyKey>
+  (obj: X, prop: Y): obj is X & Record<Y, unknown> {
+  return Object.prototype.hasOwnProperty.call(obj,prop)
+}

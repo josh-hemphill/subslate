@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"rootDir": "./",
+		"outDir": "NULL",
+		"allowJs": true,
+		"checkJs": false,
+		"incremental": true,
+		"moduleResolution": "node",
+		"module": "commonjs",
+		"lib": [
+			"es2020"
+		],
+		"types": [
+			"@types/node",
+			"@types/jest"
+		],
+		"typeRoots": [
+			"node_modules/@types",
+			"src/types"
+		]
+	},
+	"exclude": [
+		"**/node_modules/**",
+	],
+	"compileOnSave": false
+}

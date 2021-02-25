@@ -76,9 +76,7 @@
 				"**/*test*"
 			],
 			"rules": {
-				"@typescript-eslint/ban-ts-comment": [
-					"off"
-				]
+				"@typescript-eslint/ban-ts-comment": "off"
 			}
 		},
 		{
@@ -88,7 +86,7 @@
 			"rules": {
 				"@typescript-eslint/indent": [
 					"warn",
-					"2"
+					2
 				]
 			}
 		}

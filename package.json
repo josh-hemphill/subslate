@@ -52,7 +52,7 @@
 		"diff-integration-tests": "mkdir -p diff && rm -rf diff/test && cp -r test diff/test && rm -rf diff/test/test-*/.git && cd diff && git init --quiet && git add -A && git commit --quiet --no-verify --allow-empty -m 'WIP' && echo '\\n\\nCommitted most recent integration test output in the \"diff\" directory. Review the changes with \"cd diff && git diff HEAD\" or your preferred git diff viewer.'",
 		"watch:test": "jest -c config/jest.config.js -b --forceExit --watch",
 		"cov": "run-s build test:unit && open-cli coverage/index.html",
-		"cov:send": "run-s cov && codecov",
+		"cov:send": "run-s build test:unit && codecov",
 		"doc": "run-s doc:html && open-cli build/docs/index.html",
 		"doc:html": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --out build/docs",
 		"doc:json": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --json build/docs/typedoc.json",

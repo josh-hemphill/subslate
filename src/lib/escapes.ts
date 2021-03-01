@@ -11,12 +11,14 @@ const JS_DICT = {
 };
 const jsonDef = (v: (keyof typeof JS_DICT) | string) => hasOwnProperty(JS_DICT,v) ? JS_DICT[v] : v;
 const HTML_DICT = {
+	// cSpell:disable
 	'.': ['&period;'],
 	'\\':['&#x27;'],
 	'\'': ['&apos;'],
 	'"': ['&quot;'],
 	'[': ['&lsqb;'],
 	']': ['&rsqb;'],
+	// cSpell:enable
 };
 const htmlDef = (v: (keyof typeof HTML_DICT) | string) => hasOwnProperty(HTML_DICT,v) ? HTML_DICT[v] : v;
 const toJsUni = (code: number) => `\\u${Number.prototype.toString.call(code,16).toUpperCase()}`;

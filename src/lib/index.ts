@@ -1,6 +1,6 @@
 import { Context } from './context';
 import { toAllEscapes } from './escapes';
-import type { Options,cacheObj, strPairs, escapedSep } from './typing';
+import type { Options,cacheObj, strPairs, separators } from './typing';
 import { iter, defaulted,regReset, escapeRegExp, isObj } from './utils';
 interface DefaultedOptions extends Options {
 	startStopPairs: strPairs[]
@@ -15,9 +15,9 @@ export const getDefaultOptions = (options: Partial<Options>): DefaultedOptions =
 	maxNameLength: options.maxNameLength || 256,
 });
 export const createEscapes = toAllEscapes;
-export const getSeparators = (escapeSep: Options['escapeSep']): escapedSep => {
-	const [per,opBrac,clBrac,quote,apos,backt] = ['.','[',']','"',"'",'`'].map(v => escapeSep ? toAllEscapes(v,escapeSep): [v]);
-	const separators = {per,opBrac,clBrac,quote,apos,backt};
+export const getSeparators = (escapeSep: Options['escapeSep']): separators => {
+	const [per,opBracket,clBracket,quote,apostrophe,backtick] = ['.','[',']','"',"'",'`'].map(v => escapeSep ? toAllEscapes(v,escapeSep): [v]);
+	const separators = {per,opBracket,clBracket,quote,apostrophe,backtick};
 	return separators;
 };
 

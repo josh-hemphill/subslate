@@ -51,9 +51,9 @@ describe('Context',() => {
 					});
 				});
 			const [,path,context,value] = contexts[0];
-			const brack = getEscStrings(type,['[',']']);
+			const bracket = getEscStrings(type,['[',']']);
 			it.each([
-				...brack.map(([v1,v2]) =>
+				...bracket.map(([v1,v2]) =>
 					[`${v1} and ${v2}`,bracketize(path,v1,v2)]),
 			])('Parses unquoted props as %s',(_,str)=>{
 				const localOpts = {...obj,allowUnquotedProps: true};

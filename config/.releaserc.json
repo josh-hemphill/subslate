@@ -20,7 +20,6 @@
 		"semantic-release-license",
 		"@semantic-release/github",
 		"@semantic-release/npm",
-		"@semantic-release/git",
-		"@qiwi/semantic-release-gh-pages-plugin"
+		"@semantic-release/git"
 	]
 }

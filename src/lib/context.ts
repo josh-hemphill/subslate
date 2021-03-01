@@ -11,8 +11,8 @@ export class Context {
 		const id = item.content;
 		const con = this.context;
 		const {allowRootBracket,allowUnquotedProps,sanitizer} =options;
-		const {per,opBrac,clBrac,quote,apos,backt} = separators;
-		const quotes = [quote,apos,backt].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
+		const {per,opBracket,clBracket,quote,apostrophe,backtick} = separators;
+		const quotes = [quote,apostrophe,backtick].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
 
 		function getRelative(funId: string, localContext: obj, startIndex = 0): [symbol|unknown,number]{
 			let result: unknown = isBlank;
@@ -42,7 +42,7 @@ export class Context {
 					}
 				}
 				if (startIndex !== 0 || allowRootBracket) {
-					const filteredBrackets = opBrac.map((v,i) => [v,clBrac[i]]).filter(v => funId.includes(v[0]) && funId.includes(v[1]));
+					const filteredBrackets = opBracket.map((v,i) => [v,clBracket[i]]).filter(v => funId.includes(v[0]) && funId.includes(v[1]));
 					let currentBrackets: [string,string] | null = null;
 					for (const [open, close] of filteredBrackets) {
 						if (funId.startsWith(open,startIndex)) {
@@ -75,10 +75,10 @@ export class Context {
 		for (;id?.length > curInd;) {
 			const localContext: obj | unknown = finResult === isBlank ? con : finResult;
 			if (!isObj(localContext)) break;
-			const [newfinResult,foundLength] = getRelative(id,localContext,curInd);
+			const [newFinResult,foundLength] = getRelative(id,localContext,curInd);
 			if (foundLength === 0) break;
 			curInd += foundLength;
-			finResult = newfinResult;
+			finResult = newFinResult;
 		}
 
 		if (finResult === isBlank) {

@@ -60,7 +60,7 @@ describe('subslate()',()=> {
 	});
 	it('Uses cache for subsequent matches',() => {
 		const sanitizer = jest.fn((v: unknown) => {
-			let val = 'undefind';
+			let val = 'undefined';
 			if (typeof v === 'object'
 				&& hasOwnProperty(v,'isEmpty')
 				&& v.isEmpty !== true) {

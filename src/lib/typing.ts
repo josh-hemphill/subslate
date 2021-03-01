@@ -38,17 +38,9 @@ export type ArrayTwoOrMore<T> = {
 	0: T
 	1: T
 } & Array<T>
-export type escapedSep = {
-	per: string[];
-	opBrac: string[];
-	clBrac: string[];
-	quote: string[];
-	apos: string[];
-	backt: string[];
-}
 export type obj = Record<string|number, unknown>
 
-export type sepNames = 'per' | 'opBrac' | 'clBrac' | 'quote' | 'apos' | 'backt'
+export type sepNames = 'per' | 'opBracket' | 'clBracket' | 'quote' | 'apostrophe' | 'backtick'
 export type separators = {
 	[K in sepNames]: string[];
 }

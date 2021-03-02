@@ -6,6 +6,7 @@ on:
       - latest-next
       - next
       - beta
+      - alpha
       - "*.x" # maintenance releases branches
 
 jobs:

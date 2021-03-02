@@ -44,6 +44,12 @@ describe('subslate()',()=> {
 		const result =  subslate('|hi| world',{hi:'hello'},{startStopPairs});
 		expect(result).toBe('hello world');
 	});
+	it('Permits single mixed string and pairs',() => {
+		// @ts-ignore
+		const startStopPairs: strPairs[] = ['|',['${','}']];
+		const result =  subslate('|hi| ${hi2}',{hi:'hello',hi2:'world'},{startStopPairs});
+		expect(result).toBe('hello world');
+	});
 	it('Allows single pair',() => {
 		const startStopPairs: strPairs = ['${','}'];
 		const result =  subslate('${hi} world',{hi:'hello'},{startStopPairs});

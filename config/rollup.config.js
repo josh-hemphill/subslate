@@ -9,23 +9,23 @@ const input = 'src/lib/index.ts';
 const babeledOut = getBabelInputPlugin({
 	babelHelpers: 'bundled',
 	presets: [
-	  [
-		'@babel/preset-env',
-		{
-			corejs: 3,
-			useBuiltIns: 'usage',
-			"forceAllTransforms": true,
-			spec: true,
-			targets: '> 0.25%, not dead',
-		},
-	  ],
+		[
+			'@babel/preset-env',
+			{
+				corejs: 3,
+				useBuiltIns: 'usage',
+				'forceAllTransforms': true,
+				spec: true,
+				targets: '> 0.25%, not dead',
+			},
+		],
 	],
-})
+});
 const out = (format) => ({
 	format,
 	exports: 'auto',
 	sourcemap: true,
-})
+});
 
 export default [
 	{
@@ -39,8 +39,8 @@ export default [
 				browserslist: false,
 				tsconfig: 'tsconfig.json',
 				tsconfigOverride: {
-					"exclude": [
-						'**/*.test.*'
+					'exclude': [
+						'**/*.test.*',
 					],
 					compilerOptions: {
 						rootDir: './src/lib',
@@ -54,25 +54,25 @@ export default [
 				plugins: [terser()],
 				file: `${dist}subslate.cjs.js`,
 				exports: 'named',
-				...out('cjs')
+				...out('cjs'),
 			},
 			{
 				plugins: [terser()],
 				file: `${dist}subslate.cjs`,
 				exports: 'named',
-				...out('cjs')
+				...out('cjs'),
 			},
 			{
 				plugins: [terser()],
 				file: `${dist}subslate.esm.js`,
 				exports: 'auto',
-				...out('es')
+				...out('es'),
 			},
 			{
 				plugins: [terser()],
 				file: `${dist}subslate.mjs`,
 				exports: 'auto',
-				...out('es')
+				...out('es'),
 			},
 			{
 				plugins: [terser()],
@@ -80,7 +80,7 @@ export default [
 				file: `${dist}subslate.js`,
 				exports: 'default',
 				extend: true,
-				...out('umd')
+				...out('umd'),
 			},
 		],
 	},
@@ -100,14 +100,14 @@ export default [
 					declarationDir: './dist',
 				},
 			}),
-			babeledOut
+			babeledOut,
 		],
 		output: [
 			{
 				plugins: [terser()],
 				file: `${dist}subslate.poly.esm.js`,
 				exports: 'default',
-				...out('es')
+				...out('es'),
 			},
 			{
 				plugins: [terser()],
@@ -115,7 +115,7 @@ export default [
 				name: 'subslate',
 				file: `${dist}subslate.poly.js`,
 				extend: true,
-				...out('umd')
+				...out('umd'),
 			},
 			{
 				plugins: [terser()],
@@ -123,7 +123,7 @@ export default [
 				name: 'subslate',
 				file: `${dist}subslate.poly.iife.js`,
 				extend: true,
-				...out('iife')
+				...out('iife'),
 			},
 		],
 	},

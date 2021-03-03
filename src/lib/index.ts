@@ -33,6 +33,7 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 		[escapeRegExp(v[0]),escapeRegExp(v[1])]).map(([v1,v2]) =>
 		`(?:${v1}\\s*([\\s\\S]{0,${maxNameLength}}?)\\s*${v2})`);
 	const cache = new Map<string,cacheObj>();
+	const valueCache = new Map<string,string>();
 	const searcher = RegExp(filteredPairs.join('|'),'g');
 	const reset = () => regReset(searcher);
 	const execSearcher = () => searcher.exec(text);
@@ -45,6 +46,12 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 				cache.set(match, {
 					content,
 					indexes: [index],
+					get value() {
+						return valueCache.get(this.content);
+					},
+					set value(val) {
+						valueCache.set(this.content,val);
+					},
 				});
 			} else {
 				const temp = cache.get(match);
@@ -57,7 +64,7 @@ export const subslate = (text: string,context: Record<string|number,unknown>, op
 	const localStr = [...text];
 	const separators = getSeparators(escapeSep);
 	for (const [match, item] of cache) {
-		if (!Object.prototype.hasOwnProperty.call(item,'value')) {
+		if (item.value === undefined) {
 			item.value = lContext.getContextVal(item,separators,defaultedOptions);
 		}
 		for (const ind of item.indexes) {

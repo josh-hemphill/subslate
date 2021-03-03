@@ -13,32 +13,32 @@ export class Context {
 		const {allowRootBracket,allowUnquotedProps,sanitizer} =options;
 		const {per,opBracket,clBracket,quote,apostrophe,backtick} = separators;
 		const quotes = [quote,apostrophe,backtick].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
+		const nextSep = [per,opBracket].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
 
 		function getRelative(funId: string, localContext: obj, startIndex = 0): [symbol|unknown,number]{
 			let result: unknown = isBlank;
 			let foundLength = 0;
 			const base = Object.keys(localContext);
+
+			function keysInId(newInd: number, prefix = '') {
+				for (const rootKey of base) {
+					const baseStr = prefix + rootKey;
+					if (RegExp(`^[\\s\\S]{${newInd}}(${escapeRegExp(baseStr)})(?:[${nextSep.join('')}]|$)`).test(funId)) {
+						result = localContext[rootKey];
+						foundLength = baseStr.length;
+						return true;
+					}
+				}
+				return false;
+			}
+
 			FindRoot: {
 				if (startIndex === 0) {
-					for (const rootKey of base) {
-						if (funId.startsWith(rootKey,startIndex)) {
-							result = localContext[rootKey];
-							foundLength = rootKey.length;
-							break FindRoot;
-						}
-					}
+					if (keysInId(startIndex)) break FindRoot;
 				}
 				if (startIndex !== 0) {
 					for (const period of per) {
-						if (funId.startsWith(period,startIndex)) {
-							for (const rootKey of base) {
-								if (funId.startsWith(period + rootKey,startIndex)) {
-									result = localContext[rootKey];
-									foundLength = period.length + rootKey.length;
-									break FindRoot;
-								}
-							}
-						}
+						if (keysInId(startIndex,period)) break FindRoot;
 					}
 				}
 				if (startIndex !== 0 || allowRootBracket) {

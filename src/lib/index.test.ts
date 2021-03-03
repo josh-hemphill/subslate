@@ -15,6 +15,10 @@ describe('subslate()',()=> {
 		const result = subslate('${x} world, ${y}',{x:'hello',y:'hi'},{});
 		expect(result).toBe('hello world, hi');
 	});
+	it('Replaces multiple with overlapping names',() => {
+		const result = subslate('${x} world, ${xy}',{x:'hello',xy:'hi'},{});
+		expect(result).toBe('hello world, hi');
+	});
 	it('Replaces deeply object paths',() => {
 		const result = subslate('${x["y"].0.z} world',{x:{y:[{z:'hello'}]}},{});
 		expect(result).toBe('hello world');
@@ -34,7 +38,7 @@ describe('subslate()',()=> {
 	});
 	it('Throws on invalid pairs',() => {
 		// @ts-ignore
-		const startStopPairs: strPairs = ['}'];
+		const startStopPairs: strPairs = [['}']];
 		const getResult = () => subslate('${hi] world',{hi:'hi'},{startStopPairs});
 		expect(getResult).toThrow('Invalid startStopPairs');
 	});

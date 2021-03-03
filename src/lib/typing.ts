@@ -29,10 +29,10 @@ export type ContextOptions = {
 	allowRootBracket: boolean;
 	sanitizer: Sanitizer;
 }
-export type cacheObj = {
+export interface cacheObj {
 	content: string;
 	indexes: number[];
-	value?: string;
+	value: string;
 }
 export type ArrayTwoOrMore<T> = {
 	0: T

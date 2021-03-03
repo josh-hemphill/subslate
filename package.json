@@ -46,7 +46,7 @@
 		"fix:markdown": "markdownlint-cli2-fix \"**/*.md\" \"#node_modules\"",
 		"test": "run-s test:*",
 		"test:lint": "eslint src --ext .ts",
-		"test:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+		"test:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#CHANGELOG.md\"",
 		"test:spelling": "cspell --config config/cspell.json \"{README.md,.github/*.md,src/**/*.ts,docs/**/*.md}\"",
 		"test:unit": "jest -c config/jest.config.ts -b --forceExit --coverage --runInBand ",
 		"check-cli": "run-s test diff-integration-tests check-integration-tests",

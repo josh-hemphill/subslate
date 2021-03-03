@@ -139,7 +139,7 @@
 		"access": "public"
 	},
 	"release": {
-		"extends": "config/.releaserc.json"
+		"extends": "./config/.releaserc.json"
 	},
 	"config": {
 		"commitizen": {

@@ -29,7 +29,7 @@ export type ContextOptions = {
 	allowRootBracket: boolean;
 	sanitizer: Sanitizer;
 }
-export interface cacheObj {
+export type cacheObj = {
 	content: string;
 	indexes: number[];
 	value: string;

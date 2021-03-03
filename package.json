@@ -1,6 +1,6 @@
 {
 	"name": "subslate",
-	"version": "0.0.0-development",
+	"version": "1.0.0",
 	"description": "configurable template string replacement",
 	"repository": {
 		"type": "git",

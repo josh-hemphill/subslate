@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/josh-hemphill/subslate/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2021-03-04)
+
+
+### Bug Fixes
+
+* :rewind: revert deno entry ([3a19944](https://github.com/josh-hemphill/subslate/commit/3a19944bde63f00e9405d2bacc71d211a18e6b1a))
+
 # [1.0.0-alpha.2](https://github.com/josh-hemphill/subslate/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2021-03-04)
 
 

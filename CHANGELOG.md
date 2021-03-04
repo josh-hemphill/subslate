@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/josh-hemphill/subslate/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2021-03-04)
+
+
+### Bug Fixes
+
+* :bug: fix deno support ([66f02d3](https://github.com/josh-hemphill/subslate/commit/66f02d319fdebf26047c38e03de30994a1759f29))
+
 # 1.0.0-alpha.1 (2021-03-03)
 
 

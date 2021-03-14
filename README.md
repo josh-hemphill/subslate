@@ -1,6 +1,6 @@
 # subslate
 
-A configurable template string replacement library for Node.js and Deno
+A configurable template string replacement library for Node.js, web, and Deno
 
 <br />
 

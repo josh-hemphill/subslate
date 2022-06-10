@@ -106,7 +106,7 @@
 		"rollup": "^2.39.1",
 		"rollup-plugin-clear": "^2.0.7",
 		"rollup-plugin-terser": "^7.0.2",
-		"semantic-release": "^17.3.9",
+		"semantic-release": "^19.0.3",
 		"semantic-release-license": "^1.0.2",
 		"ts-jest": "^26.5.2",
 		"ts-node": "^9.1.1",

@@ -9,7 +9,7 @@ A configurable template string replacement library for Node.js, web, and Deno
 [![version](https://img.shields.io/github/v/tag/josh-hemphill/subslate?sort=semver&style=flat-square)](https://github.com/josh-hemphill/subslate/releases)
 [![NPM](https://img.shields.io/static/v1?label=&message=NPM&color=informational&style=flat-square)](https://npmjs.org/package/subslate)
 [![Deno](https://img.shields.io/static/v1?label=&message=Deno&color=informational&style=flat-square)](https://deno.land/x/subslate/mod.ts)
-[![API doc](https://img.shields.io/static/v1?label=Deno&message=API-Doc&color=informational&style=flat-square)](https://doc.deno.land/https/deno.land/x/subslate/mod.ts)
+[![Usage](https://img.shields.io/static/v1?label=Subslate&message=Usage&color=informational&style=flat-square)](#usage)
 <!-- [![docs](https://img.shields.io/static/v1?label=&message=Docs&color=informational&style=flat-square)](https://josh-hemphill.github.io/subslate/#/) -->
 [![Build Status](https://img.shields.io/travis/josh-hemphill/subslate.svg?style=flat-square)](https://travis-ci.org/josh-hemphill/subslate)
 [![Codecov](https://img.shields.io/codecov/c/github/josh-hemphill/subslate.svg?style=flat-square)](https://codecov.io/gh/josh-hemphill/subslate)

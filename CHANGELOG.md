@@ -1,3 +1,11 @@
+# 2.0.0-beta.0
+
+- Ship an ESM package for Node.js 22.13 and newer, plus the browser module and classic script.
+- Prepare optional JSR distribution and retire formal Deno runtime support.
+- Fix replacements around Unicode characters and interleaved repeated placeholders.
+- Export option types and accept the documented delimiter forms in TypeScript.
+- Build and verify the distributable package with pnpm, Rolldown, TypeScript, and Vitest.
+
 # 1.0.0 (2021-03-03)
 
 

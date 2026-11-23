@@ -1,46 +1,43 @@
-export type escapeNames = 'json' | 'html' | 'url' | 'js'
+export type escapeNames = 'json' | 'html' | 'url' | 'js';
+
+/** Escape styles accepted in object path separators. */
 export type EscapeTypeFlags = {
-	[K in escapeNames]?: boolean
-}
-export type strPairs = [string,string]
+	[K in escapeNames]?: boolean;
+};
+
+/** A start delimiter followed by an end delimiter. */
+export type StartStopPair = readonly [start: string, stop: string];
+
+/** A symmetric delimiter, a pair, or a list of delimiter strings and pairs. */
+export type StartStopPairs = string | StartStopPair | readonly (string | StartStopPair)[];
+
+export type strPairs = [string, string];
+
+/** Subslate configuration. All fields are optional when calling Subslate. */
 export type Options = {
-	startStopPairs: strPairs | strPairs[];
+	startStopPairs: StartStopPairs;
 	escapeSep: false | EscapeTypeFlags;
 	maxNameLength: number;
-} & ContextOptions
+} & ContextOptions;
+
+/** Resolved placeholder data passed to a sanitizer. */
 export type SanitizerOptions = {
-	isEmpty: boolean,
-	id: string,
-	at?: number,
-	value?: unknown,
-}
-/**
-@example
-({
-	isEmpty,
-	id,
-	at,
-	value,
-}) => isEmpty ? 'empty' : String(value)
-*/
-export type Sanitizer = (v: SanitizerOptions) => string;
+	isEmpty: boolean;
+	id: string;
+	at?: number;
+	value?: unknown;
+};
+
+/** Converts a placeholder's data to its replacement text. */
+export type Sanitizer = (value: SanitizerOptions) => string;
+
 export type ContextOptions = {
 	allowUnquotedProps: boolean;
 	allowRootBracket: boolean;
 	sanitizer: Sanitizer;
-}
-export type cacheObj = {
-	content: string;
-	indexes: number[];
-	value: string;
-}
-export type ArrayTwoOrMore<T> = {
-	0: T
-	1: T
-} & Array<T>
-export type obj = Record<string|number, unknown>
+};
 
-export type sepNames = 'per' | 'opBracket' | 'clBracket' | 'quote' | 'apostrophe' | 'backtick'
-export type separators = {
-	[K in sepNames]: string[];
-}
+export type obj = Record<string | number, unknown>;
+
+export type sepNames = 'per' | 'opBracket' | 'clBracket' | 'quote' | 'apostrophe' | 'backtick';
+export type separators = Record<sepNames, string[]>;

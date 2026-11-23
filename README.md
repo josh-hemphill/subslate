@@ -1,204 +1,113 @@
-# subslate
+# Subslate
 
-A configurable template string replacement library for Node.js, web, and Deno
-
-<br />
-
-<!-- cspell: disable bracketsstartstop -->
-
-[![version](https://img.shields.io/github/v/tag/josh-hemphill/subslate?sort=semver&style=flat-square)](https://github.com/josh-hemphill/subslate/releases)
-[![NPM](https://img.shields.io/static/v1?label=&message=NPM&color=informational&style=flat-square)](https://npmjs.org/package/subslate)
-[![Deno](https://img.shields.io/static/v1?label=&message=Deno&color=informational&style=flat-square)](https://deno.land/x/subslate/mod.ts)
-[![Usage](https://img.shields.io/static/v1?label=Subslate&message=Usage&color=informational&style=flat-square)](#usage)
-<!-- [![docs](https://img.shields.io/static/v1?label=&message=Docs&color=informational&style=flat-square)](https://josh-hemphill.github.io/subslate/#/) -->
-[![Build Status](https://img.shields.io/travis/josh-hemphill/subslate.svg?style=flat-square)](https://travis-ci.org/josh-hemphill/subslate)
-[![Codecov](https://img.shields.io/codecov/c/github/josh-hemphill/subslate.svg?style=flat-square)](https://codecov.io/gh/josh-hemphill/subslate)
-[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/subslate?label=Deps&style=flat-square)](https://libraries.io/npm/subslate)
-[![Rate on Openbase](https://badges.openbase.io/js/rating/subslate.svg)](https://openbase.io/js/subslate?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+Replace placeholders in a template string with values from objects and arrays.
+Subslate is a zero-dependency ES module for Node.js and modern browsers.
 
 ## Install
 
-### Node.js & Browser
-
-```bash
+```sh
 npm install subslate
 ```
 
 ```js
-/* ES Module / Typescript */ import { subslate } from "subslate";
-/* CommonJS */ const { subslate } = require("subslate");
+import { subslate } from 'subslate';
 ```
 
-### Deno
+Subslate 2 requires Node.js 22.13 or newer. The package also exports
+`subslate` as its default export.
+
+When the JSR release is available, you can install the same API from
+`@josh-hemphill/subslate`.
+
+```sh
+pnpm add jsr:@josh-hemphill/subslate
+```
 
 ```js
-import subslate from "https://deno.land/x/subslate/mod.ts"
+import { subslate } from '@josh-hemphill/subslate';
 ```
 
-### Import in HTML
+### Browser
+
+For a browser without a bundler, serve the package's
+`dist/subslate.esm.js` as a module. Use `dist/subslate.js` for a classic
+script that exposes `globalThis.subslate.subslate`. The npm package's
+default unpkg URL serves the classic script.
 
 ```html
-<script type="text/javascript" src="dist/subslate.js"></script> <!-- For UMD module -->
-<script type="text/javascript" src="dist/subslate.poly.iife.js"></script> <!-- For global IIFE with polyfills -->
-<script type="module" src="dist/subslate.esm.js"></script> <!-- For ES Module -->
+<script type="module">
+	import { subslate } from './subslate.esm.js';
+	console.log(subslate('Hello ${name}', { name: 'world' }));
+</script>
 ```
-
-### From CDN
-
-```html
-<script type="text/javascript" src="https://unpkg.com/subslate"></script>
-```
-
-## Examples
-
-For a full list see the [examples directory](./example/) (coming)
-
-### Play with it
-
-[CodePen (suggested)](##) (coming soon)
-
-[JSFiddle](##) (coming soon)
 
 ## Usage
 
-Create a template with any kind of start and stop characters and configurable object path indicators; or by default just use JS style template characters (don't forget to escape them in a JS template if you want them there to replace later)
-
-### Basic Usage
-
-```js
-import { subslate } from "subslate";
-
-const template = '${A} world ${x["y"].0.z}'
-
-const context = {A: 'hi', x:{y:[{z:', hello'}]}}
-
-const compiled = subslate(template,context)
-
-compiled === 'hi world, hello'
-```
-
-## Options
-
-`subslate(template,context,options)`
-
-  - [`options.startStopPairs`: `string | (string | [string, string])[]`](#with-custom-bracketsstartstop)
-  - [`options.escapeSep`: `{[K in 'json' | 'html' | 'url' | 'js']?: boolean`](#with-escaped-object-property-indicators)
-  - [`options.allowUnquotedProps`: `boolean`](#with-root-and-unquoted-brackets)
-  - [`options.allowRootBracket`: `boolean`](#with-root-and-unquoted-brackets)
-  - [`options.sanitizer`: `(v: SanitizerOptions) => string`](#with-sanitizer)
-  - `options.maxNameLength`: `number` (maximum character length between start and stop)
-
-### With Custom Brackets/Start-Stop
+Subslate defaults to JavaScript-style delimiters and supports nested
+object and array paths.
 
 ```js
-import { subslate } from "subslate";
+import { subslate } from 'subslate';
 
-const template = `
-SELECT * FROM ![tables.table]
-`
-const context = {tables: {table: 'myTable'}}
+const template = '${A} world ${x["y"].0.z}';
+const context = { A: 'hi', x: { y: [{ z: ', hello' }] } };
 
-const compiled = subslate(template,context,{
-  startStopPairs: ['![',']']
-  // startStopPairs gets normalized to an array of pairs, so
-  // ['![',']'] gets turned into [['![',']']]
-  // and '||' would get turned into [['||','||']]
-  // or even mixed ['||',['${','}']] = [['||','||'],['${','}']]
-})
-compiled === `
-SELECT * FROM myTable
-`
+subslate(template, context); // 'hi world, hello'
 ```
 
-### With Escaped Object Property Indicators
+### Options
 
-```js
-import { subslate } from "subslate";
-
-const template = `
-<p>
-  <% x%5B%22y%22%5D\\u2E0&period;z %>
-</p>
-`
-
-const context = {x:{y:[{z:'hello'}]}}
-
-const compiled = subslate(template,context,{
-  startStopPairs: ['<%','%>'],
-  escapeSep: {
-    json: true
-    html: true
-    url: true
-    js: true
-  }
-})
-compiled === `
-<p>
-  hello
-</p>
-`
-```
-
-### With Sanitizer
-
-The sanitizer recieves all errors and empty fields as well as successful values. So you have a chance to to correct how you want the final string to be injected. A sanitizer must allways return a string, otherwise the library throws an error.
+- `startStopPairs` accepts a symmetric delimiter string, a two-string
+  start/end pair, or a list of strings and pairs. A bare two-string array
+  is treated as one start/end pair.
+- `escapeSep` enables `json`, `html`, `url`, or `js` escape forms in
+  object path separators.
+- `allowUnquotedProps` permits unquoted keys inside brackets.
+- `allowRootBracket` permits a path to start with bracket notation.
+- `maxNameLength` sets the maximum path length and defaults to 256.
+- `sanitizer` receives the placeholder ID and its resolved value or
+  missing-value details, then returns replacement text.
 
 ```ts
-import { subslate } from "subslate";
+import { subslate } from 'subslate';
+import type { Options, Sanitizer } from 'subslate';
 
-const template = 'SELECT * FROM ${myTable}${blabla}'
-const context = {myTable:'hello'}
+const sanitizer: Sanitizer = ({ isEmpty, value }) => (isEmpty ? '' : String(value));
 
-type SanitizerOptions = {
-  // If there was no characters between the start and stop
-  isEmpty: boolean,
+const options = {
+	startStopPairs: ['|', ['<%', '%>']],
+	allowUnquotedProps: true,
+	allowRootBracket: true,
+	sanitizer,
+} as const satisfies Partial<Options>;
 
-  // The full id that was between start and stop
-  id: string,
-
-  // The index in the id where parsing stopped if there was a problem
-  at?: number,
-
-  // The value that was successfully found for a givin id
-  value?: unknown,
-}
-
-function sanitizer: string (opts: SanitizerOptions) {
-  if (opts.isEmpty || opts.at !== undefined) return ''; // to silence errors from resulting in the stringified "undefined" being injected.
-  return opts.value;
-}
-
-const compiled = subslate(template,context,{sanitizer})
-compiled === 'SELECT * FROM hello'
+subslate('|user.name| <% [user].name %>', { user: { name: 'Ada' } }, options);
+// 'Ada Ada'
 ```
 
-### With Root and Unquoted Brackets
+A missing root or empty placeholder renders as `'undefined'` by default.
+A partially resolved path renders its last resolved value. Subslate calls
+the sanitizer once per placeholder ID per render. Supply a sanitizer
+appropriate for the output context when interpolating untrusted values.
+
+## Migrating from 1.x
+
+Use a static ESM import or `import('subslate')` when migrating from the 1.x
+CommonJS bundle. Node's own `require(esm)` support is also available to
+CommonJS callers on Node versions that provide it.
+
+The old polyfill builds have been retired. For modern browsers, use
+`dist/subslate.esm.js` in place of `dist/subslate.poly.esm.js`, or use
+`dist/subslate.js` in place of `dist/subslate.poly.js` and
+`dist/subslate.poly.iife.js`. The old files remain available from the
+[versioned 1.0.0 CDN directory](https://unpkg.com/browse/subslate@1.0.0/dist/).
+
+Formal Deno runtime and `deno.land/x` support ends with 1.x. To stay on the
+legacy URL, use the version-pinned named import.
 
 ```js
-import { subslate } from "subslate";
-
-const template = `
-<p>
-  <% [x].y %>
-</p>
-`
-
-const context = {x:{y:'hello'}}
-
-const compiled = subslate(template,context,{
-  startStopPairs: ['<%','%>'],
-  allowUnquotedProps: true
-  allowRootBracket: true
-})
-compiled === `
-<p>
-  hello
-</p>
-`
+import { subslate } from 'https://deno.land/x/subslate@v1.0.0/mod.ts';
 ```
-
-<!-- markdownlint-disable-next-line-->
-## Reademe rewrite in progress...
 
 ## Contributors
 

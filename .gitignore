@@ -1,8 +1,7 @@
-.idea/*
-node_modules
-src/**.js
-coverage
+.idea/
+node_modules/
+dist/
+coverage/
+artifacts/
 *.log
-yarn.lock
-package-lock.json
-**/*.tsbuildinfo
+*.tsbuildinfo

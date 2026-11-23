@@ -1,78 +1,77 @@
-import { Context } from './context';
-import { toAllEscapes } from './escapes';
-import type { Options,cacheObj, strPairs, separators } from './typing';
-import { iter, defaulted,regReset, escapeRegExp, isObj } from './utils';
+import { Context } from './context.ts';
+import { toAllEscapes } from './escapes.ts';
+import type { Options, strPairs, separators } from './typing.ts';
+import { defaulted, escapeRegExp, isObj } from './utils.ts';
+
 interface DefaultedOptions extends Options {
-	startStopPairs: strPairs[]
+	startStopPairs: strPairs[];
 }
+
+/** Apply Subslate's default delimiter and path options. */
 export const getDefaultOptions = (options: Partial<Options>): DefaultedOptions => ({
-	startStopPairs: defaulted(options.startStopPairs,['${','}'],'Invalid startStopPairs'),
-	escapeSep: typeof options.escapeSep === 'undefined' ? false : options.escapeSep,
+	startStopPairs: defaulted(options.startStopPairs, ['${', '}'], 'Invalid startStopPairs'),
+	escapeSep: options.escapeSep ?? false,
 	allowUnquotedProps: !!options.allowUnquotedProps,
 	allowRootBracket: !!options.allowRootBracket,
-	sanitizer: options.sanitizer || ((v) =>
-		v.isEmpty === true ? 'undefined' : String(v.value)),
+	sanitizer: options.sanitizer || ((value) => (value.isEmpty ? 'undefined' : String(value.value))),
 	maxNameLength: options.maxNameLength || 256,
 });
-export const createEscapes = toAllEscapes;
+
+/** List the enabled escape representations of a path separator. */
+export const createEscapes: typeof toAllEscapes = toAllEscapes;
+
+/** Build the separator lists used by the object path parser. */
 export const getSeparators = (escapeSep: Options['escapeSep']): separators => {
-	const [per,opBracket,clBracket,quote,apostrophe,backtick] = ['.','[',']','"',"'",'`'].map(v => escapeSep ? toAllEscapes(v,escapeSep): [v]);
-	const separators = {per,opBracket,clBracket,quote,apostrophe,backtick};
-	return separators;
+	const [per, opBracket, clBracket, quote, apostrophe, backtick] = [
+		'.',
+		'[',
+		']',
+		'"',
+		"'",
+		'`',
+	].map((value) => (escapeSep ? toAllEscapes(value, escapeSep) : [value]));
+	return { per, opBracket, clBracket, quote, apostrophe, backtick };
 };
 
-export const subslate = (text: string,context: Record<string|number,unknown>, options?: Partial<Options> | undefined): string => {
-	const localOpts = isObj(options) ? options : {};
-	const defaultedOptions = getDefaultOptions(localOpts);
-	const {
-		startStopPairs,
-		escapeSep,
-		maxNameLength,
-	} = defaultedOptions;
-	const filteredPairs = startStopPairs.filter(v => text.includes(v[0]) && text.includes(v[1])).map(v =>
-		[escapeRegExp(v[0]),escapeRegExp(v[1])]).map(([v1,v2]) =>
-		`(?:${v1}\\s*([\\s\\S]{0,${maxNameLength}}?)\\s*${v2})`);
-	const cache = new Map<string,cacheObj>();
-	const valueCache = new Map<string,string>();
-	const searcher = RegExp(filteredPairs.join('|'),'g');
-	const reset = () => regReset(searcher);
-	const execSearcher = () => searcher.exec(text);
-	for (const res of iter(execSearcher,[],reset)) {
-		if (res !== null) {
-			const {index} = res;
-			const [match, content] = res.filter(v => typeof v === 'string');
-			if (!match && !searcher.lastIndex) break;
-			if(!cache.has(match)) {
-				cache.set(match, {
-					content,
-					indexes: [index],
-					get value() {
-						return valueCache.get(this.content);
-					},
-					set value(val) {
-						valueCache.set(this.content,val);
-					},
-				});
-			} else {
-				const temp = cache.get(match);
-				if (temp) temp.indexes.push(index);
-			}
-		}
-	}
-	const lContext = new Context(context);
-	let indexOffset = 0;
-	const localStr = [...text];
+/** Replace each placeholder with the value at its path in the supplied context. */
+export const subslate = (
+	text: string,
+	context: Record<string | number, unknown>,
+	options?: Partial<Options>,
+): string => {
+	const defaults = getDefaultOptions(isObj(options) ? options : {});
+	const { startStopPairs, escapeSep, maxNameLength } = defaults;
+	const patterns = startStopPairs
+		.filter(([open, close]) => text.includes(open) && text.includes(close))
+		.map(
+			([open, close]) =>
+				`(?:${escapeRegExp(open)}\\s*([\\s\\S]{0,${maxNameLength}}?)\\s*${escapeRegExp(close)})`,
+		);
+	if (patterns.length === 0) return text;
+
+	const searcher = new RegExp(patterns.join('|'), 'g');
 	const separators = getSeparators(escapeSep);
-	for (const [match, item] of cache) {
-		if (item.value === undefined) {
-			item.value = lContext.getContextVal(item,separators,defaultedOptions);
+	const contextReader = new Context(context);
+	const values = new Map<string, string>();
+	const parts: string[] = [];
+	let offset = 0;
+
+	for (const match of text.matchAll(searcher)) {
+		const [token, ...captures] = match;
+		const id = captures.find((value) => value !== undefined);
+		if (!token || id === undefined) continue;
+
+		let value = values.get(id);
+		if (value === undefined) {
+			value = contextReader.getContextVal(id, separators, defaults);
+			values.set(id, value);
 		}
-		for (const ind of item.indexes) {
-			const value = String(item.value || '');
-			localStr.splice(ind + indexOffset,match.length, ...value);
-			indexOffset += (value.length - match.length);
-		}
+
+		parts.push(text.slice(offset, match.index), value);
+		offset = match.index + token.length;
 	}
-	return localStr.join('');
+
+	return parts.length > 0 ? parts.join('') + text.slice(offset) : text;
 };
+
 export default subslate;

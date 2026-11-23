@@ -1,23 +1,5 @@
 {
-    "version": "0.1",
-    "language": "en",
-    "words": [
-        "bracketize",
-        "Deno",
-        "errored",
-        "iife",
-        "markdownlint",
-        "Openbase",
-        "pasteable",
-        "Reademe",
-        "Styleguide",
-        "styleguide",
-        "Styleguides",
-        "styleguides",
-        "Subslate's",
-        "typeof"
-    ],
-    "flagWords": [
-        "hte"
-    ]
+  "version": "0.2",
+  "language": "en",
+  "words": ["bracketize", "deno", "dist", "hemphill", "jsr", "pnpm", "subslate", "unpkg"]
 }

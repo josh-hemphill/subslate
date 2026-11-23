@@ -1,16 +1,18 @@
 {
-	"line-length": false,
-	"MD001": false,
-	"MD007": {
-		"indent": 2,
-		"start_indented": true
-	},
-	"MD030": {
-		"ol_multi": 1,
-		"ol_single": 1,
-		"ul_multi": 1,
-		"ul_single": 1
-	},
-	"MD033": false,
-	"MD041": false
+  "line-length": false,
+  "MD001": false,
+  "MD007": {
+    "indent": 2
+  },
+  "MD030": {
+    "ol_multi": 1,
+    "ol_single": 1,
+    "ul_multi": 1,
+    "ul_single": 1
+  },
+  "MD033": false,
+  "MD041": false,
+  "MD010": {
+    "code_blocks": false
+  }
 }

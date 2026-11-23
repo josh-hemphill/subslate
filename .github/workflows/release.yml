@@ -1,23 +1,64 @@
 name: Release
+
 on:
   push:
-    branches:
-      - latest
-      - latest-next
-      - next
-      - beta
-      - alpha
-      - "*.x" # maintenance releases branches
+    tags: ['v*']
+
+permissions:
+  contents: read
 
 jobs:
-  release:
-    name: release
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  npm:
+    needs: verify
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - uses: bahmutov/npm-install@v1
-      - run: npx semantic-release
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: npm-tarball
+          path: artifacts
+      - id: release
+        run: node scripts/check-release.mjs npm artifacts/subslate-*.tgz
+      - if: steps.release.outputs.published == 'false'
+        run: npm exec --yes --package=npm@11.18.0 -- npm publish "$TARBALL" --access public --tag "$DIST_TAG"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.SEMANTIC_RELEASE_BOT_NPM_TOKEN }}
+          TARBALL: ${{ steps.release.outputs.tarball }}
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+
+  jsr:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: '2.9.6'
+      - id: release
+        run: node scripts/check-release.mjs jsr
+      - run: pnpm stage:jsr "$RUNNER_TEMP/subslate-jsr"
+      - run: deno publish --dry-run
+        working-directory: ${{ runner.temp }}/subslate-jsr
+      - if: steps.release.outputs.published == 'false'
+        run: deno publish
+        working-directory: ${{ runner.temp }}/subslate-jsr
+      - run: pnpm install --frozen-lockfile
+      - name: Verify published JSR installs
+        run: node scripts/smoke-jsr.mjs "$VERSION"
+        env:
+          VERSION: ${{ steps.release.outputs.version }}

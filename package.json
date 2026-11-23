@@ -1,14 +1,32 @@
 {
 	"name": "subslate",
-	"version": "1.0.0",
+	"version": "2.0.0-beta.0",
 	"description": "configurable template string replacement",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/josh-hemphill/subslate.git"
-	},
+	"keywords": [
+		"configurable",
+		"custom",
+		"expand",
+		"format",
+		"formatting",
+		"interpolate",
+		"interpolation",
+		"light",
+		"object",
+		"parser",
+		"parsing",
+		"placeholders",
+		"replace",
+		"simple",
+		"string",
+		"template",
+		"templating",
+		"transform",
+		"values"
+	],
 	"bugs": {
 		"url": "https://github.com/josh-hemphill/subslate/issues"
 	},
+	"license": "MIT",
 	"contributors": [
 		{
 			"name": "Joshua Hemphill",
@@ -16,149 +34,60 @@
 			"email": "jhemphill@tecnicocorp.com"
 		}
 	],
-	"license": "MIT",
-	"keywords": [
-		"string",
-		"formatting",
-		"template",
-		"parser",
-		"object",
-		"format",
-		"interpolate",
-		"interpolation",
-		"templating",
-		"parsing",
-		"configurable",
-		"custom",
-		"expand",
-		"simple",
-		"replace",
-		"placeholders",
-		"values",
-		"transform",
-		"light"
-	],
-	"scripts": {
-		"build": "rollup -c config/rollup.config.js --validate",
-		"build:test": "jest -c config/jest.config.ts -b --forceExit --coverage --runInBand build.test.ts",
-		"fix": "run-s fix:*",
-		"fix:lint": "eslint src --ext .ts --fix",
-		"fix:markdown": "markdownlint-cli2-fix \"**/*.md\" \"#node_modules\"",
-		"test": "run-s test:*",
-		"test:lint": "eslint src --ext .ts",
-		"test:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#CHANGELOG.md\"",
-		"test:spelling": "cspell --config config/cspell.json \"{README.md,.github/*.md,src/**/*.ts,docs/**/*.md}\"",
-		"test:unit": "jest -c config/jest.config.ts -b --forceExit --coverage --runInBand ",
-		"check-cli": "run-s test diff-integration-tests check-integration-tests",
-		"check-integration-tests": "run-s check-integration-test:*",
-		"diff-integration-tests": "mkdir -p diff && rm -rf diff/test && cp -r test diff/test && rm -rf diff/test/test-*/.git && cd diff && git init --quiet && git add -A && git commit --quiet --no-verify --allow-empty -m 'WIP' && echo '\\n\\nCommitted most recent integration test output in the \"diff\" directory. Review the changes with \"cd diff && git diff HEAD\" or your preferred git diff viewer.'",
-		"watch:test": "jest -c config/jest.config.js -b --forceExit --watch",
-		"cov": "run-s build test:unit && open-cli coverage/index.html",
-		"cov:send": "run-s build test:unit && codecov",
-		"doc": "run-s doc:html && open-cli build/docs/index.html",
-		"doc:html": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --out build/docs",
-		"doc:json": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --json build/docs/typedoc.json",
-		"reset-hard": "git clean -dfx && git reset --hard && npm i",
-		"prepare-release": "run-s reset-hard test doc:html version doc:publish",
-		"ci:validate": "rm -rf node_modules && npm ci && npm run test",
-		"prepublishOnly": "npm run ci:validate && npm run build",
-		"semantic-release": "semantic-release"
-	},
-	"engines": {
-		"node": ">= 10.14.2"
-	},
-	"dependencies": {},
-	"devDependencies": {
-		"@babel/core": "^7.13.1",
-		"@babel/preset-env": "^7.13.5",
-		"@commitlint/cli": "^11.0.0",
-		"@commitlint/config-conventional": "^11.0.0",
-		"@rollup/plugin-babel": "^5.3.0",
-		"@semantic-release/changelog": "^5.0.1",
-		"@semantic-release/git": "^9.0.0",
-		"@semantic-release/npm": "^7.0.10",
-		"@types/jest": "^26.0.20",
-		"@types/node": "^14.14.31",
-		"@typescript-eslint/eslint-plugin": "^4.15.2",
-		"@typescript-eslint/parser": "^4.15.2",
-		"@wessberg/rollup-plugin-ts": "^1.3.8",
-		"babel-jest": "^26.6.3",
-		"babel-plugin-add-module-exports": "^1.0.4",
-		"babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-		"codecov": "^3.8.1",
-		"commitizen": "^4.2.3",
-		"core-js": "^3.9.0",
-		"cspell": "^5.3.1",
-		"cz-conventional-changelog": "^3.3.0",
-		"eslint": "^7.20.0",
-		"eslint-config-standard": "^16.0.2",
-		"eslint-plugin-eslint-comments": "^3.2.0",
-		"eslint-plugin-import": "^2.22.1",
-		"eslint-plugin-promise": "^4.3.1",
-		"eslint-plugin-standard": "^5.0.0",
-		"gh-pages": "^3.1.0",
-		"husky": "^4.3.8",
-		"jest": "^26.6.3",
-		"lint-staged": "^10.5.4",
-		"markdownlint-cli2": "0.0.13",
-		"npm-run-all": "^4.1.5",
-		"open-cli": "^6.0.1",
-		"rollup": "^2.39.1",
-		"rollup-plugin-clear": "^2.0.7",
-		"rollup-plugin-terser": "^7.0.2",
-		"semantic-release": "^17.3.9",
-		"semantic-release-license": "^1.0.2",
-		"ts-jest": "^26.5.2",
-		"ts-node": "^9.1.1",
-		"typedoc": "^0.20.28",
-		"typescript": "^4.2.2"
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/josh-hemphill/subslate.git"
 	},
 	"files": [
 		"dist",
-		"examples",
-		"!**/*.spec.*",
-		"!**/*.json",
-		"mod.ts",
 		"CHANGELOG.md",
-		"LICENSE",
-		"SECURITY.md",
-		"README.md"
+		"SECURITY.md"
 	],
-	"exports": {
-		"import": "./dist/subslate.mjs",
-		"require": "./dist/subslate.cjs",
-		"default": "./dist/subslate.esm.js"
-	},
-	"main": "dist/subslate.cjs.js",
 	"type": "module",
-	"typings": "dist/subslate.d.ts",
-	"module": "dist/subslate.esm.js",
-	"browser": "dist/subslate.esm.js",
-	"unpkg": "dist/subslate.js",
+	"main": "./dist/subslate.esm.js",
+	"module": "./dist/subslate.esm.js",
+	"browser": "./dist/subslate.esm.js",
+	"types": "./dist/subslate.d.ts",
+	"unpkg": "./dist/subslate.js",
+	"exports": {
+		".": {
+			"types": "./dist/subslate.d.ts",
+			"default": "./dist/subslate.esm.js"
+		}
+	},
 	"publishConfig": {
 		"access": "public"
 	},
-	"release": {
-		"extends": "./config/.releaserc.json"
+	"scripts": {
+		"build": "node scripts/build.mjs",
+		"prepack": "node scripts/build.mjs",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"coverage": "vitest run --coverage",
+		"typecheck": "tsc --noEmit",
+		"lint": "oxlint --deny-warnings src scripts test vitest.config.ts",
+		"lint:markdown": "markdownlint-cli2 README.md",
+		"spell": "cspell --no-progress README.md \"src/**/*.ts\"",
+		"format": "oxfmt src scripts test .github/workflows README.md package.json jsr.json tsconfig.json vitest.config.ts",
+		"format:check": "oxfmt --check src scripts test .github/workflows README.md package.json jsr.json tsconfig.json vitest.config.ts",
+		"smoke": "node scripts/smoke.mjs",
+		"stage:jsr": "node scripts/stage-jsr.mjs"
 	},
-	"config": {
-		"commitizen": {
-			"path": "cz-conventional-changelog"
-		}
+	"devDependencies": {
+		"@vitest/coverage-v8": "5.1.1",
+		"cspell": "10.3.0",
+		"markdownlint-cli2": "0.23.2",
+		"oxfmt": "0.67.0",
+		"oxlint": "1.82.0",
+		"playwright": "1.65.1",
+		"rolldown": "1.3.3",
+		"rolldown-plugin-dts": "0.30.2",
+		"typescript": "6.0.3",
+		"vite": "8.3.4",
+		"vitest": "5.1.1"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged",
-			"pre-push": "npm run test"
-		}
+	"engines": {
+		"node": ">=22.13.0"
 	},
-	"eslintConfig": {
-		"extends": "./config/.eslintrc.json"
-	},
-	"lint-staged": {
-		"*.js": [
-			"eslint --cache --fix",
-			"git add ."
-		]
-	}
+	"packageManager": "pnpm@12.21.0"
 }

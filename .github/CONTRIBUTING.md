@@ -58,12 +58,12 @@ Provide more context by answering these questions:
 
   - **Can you reproduce the problem in [a sandbox](https://codepen.io)?**
   - **Did the problem start happening recently** or was this always a problem?
-  - If the problem started happening recently, **can you reproduce the problem in an older version?** What's the most recent version in which the problem doesn't happen? You can download older versions from NPM or Deno.
+  - If the problem started happening recently, **can you reproduce the problem in an older version?** What's the most recent version in which the problem doesn't happen? You can download older versions from npm. The README lists the legacy 1.x Deno URL.
   - **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 
 Include details about your configuration and environment:
 
-  - **Which version are you using?** You can get the exact version by looking in your `package.json` or in your Deno import.
+  - **Which version are you using?** You can get the exact version from your package manager or import URL.
   - **What's the name and version of the OS you're using**?
   - **Which other packages do you have installed?**
 
@@ -87,7 +87,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
   - **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
   - **Explain why this enhancement would be useful** to most users and isn't something that can or should be implemented as a separate package.
   - **List some other places this exists.**
-  - **Which version are you using?** You can get the exact version by looking in your `package.json` or in your Deno import.
+  - **Which version are you using?** You can get the exact version from your package manager or import URL.
   - **Specify the name and version of the platform you're using.**
 
 ### Your First Code Contribution
@@ -102,7 +102,36 @@ While not perfect, number of comments is a reasonable proxy for impact a given c
 
 #### Local development
 
-For instructions on how to setup and run development, see the following [Development Guide](https://github.com/josh-hemphill/subslate/docs/development.md)
+Use the Node version in `.node-version` and the pnpm version in `package.json`.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm test
+pnpm format:check
+pnpm lint
+pnpm exec playwright install chromium
+pnpm pack --pack-destination artifacts
+pnpm smoke artifacts/subslate-*.tgz
+```
+
+The 2.0 beta npm tarball is about 13 KiB compressed, compared with about
+19 KiB for npm 1.0.0. The beta tarball also passed exploratory ESM checks
+on Bun 1.4.5 and a local Workers request in workerd 1.20260730.1 without
+`nodejs_compat`. CI covers the Node version matrix, Chromium, and a
+production Vite bundle.
+
+#### Releasing
+
+Match the npm and JSR versions, update the changelog, and tag the commit
+`v<version>`. The release workflow verifies and publishes the same npm
+tarball. Prereleases use the `beta` dist-tag.
+
+Configure the npm trusted publisher for `release.yml` with direct
+publishing enabled. For JSR, create `@josh-hemphill/subslate`, link the
+GitHub repository, and trigger the release as a member of the JSR scope.
+The JSR job stages package sources and runs `deno publish --dry-run`
+before publishing that stage. Deno is used only in the JSR publication job.
 
 ### Pull Requests
 
@@ -134,11 +163,11 @@ or other changes before your pull request can be ultimately accepted.
 
 ### Git Commit Messages
 
-Use the dev dependency `commitizen` to walk you through writing good commit messages.
+Use conventional commit messages like `fix: preserve Unicode during replacement`.
 
 ### JavaScript Styleguide
 
-All JavaScript code is linted with [ESLint](https://eslint.org/).
+Run `pnpm lint` for Oxlint checks and `pnpm format` to apply Oxfmt.
 
   - Prefer the object spread operator (`{...anotherObj}`) to `Object.assign()`
   - Inline `export`s with expressions whenever possible
@@ -167,7 +196,7 @@ All JavaScript code is linted with [ESLint](https://eslint.org/).
 ### Specs Styleguide
 
   - Include thoughtfully-worded, well-structured
-  [Jest](https://jestjs.io/) tests next to their dependant modules.
+  [Vitest](https://vitest.dev/) tests next to their dependant modules.
   - Include integration, build, and platform tests under the `test/` directory.
   - Treat `describe` as a noun or situation.
   - Treat `it` as a statement about state or how an operation changes state.
@@ -190,9 +219,9 @@ describe('a dog', () => {
 ### Documentation Styleguide
 
   - Use [Markdown](https://daringfireball.net/projects/markdown).
-  - Markdown is linted with
+  - The README is linted with
   [MarkdownLint](https://github.com/DavidAnson/markdownlint-cli2)
-  in builds and in VsCode with
+  in CI and in VS Code with
   [the corresponding VsCode extension](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
   - Reference methods and classes in markdown with the its JSDoc/TSDoc definition:
     - Reference classes with `{typeof ClassName}`
@@ -203,8 +232,8 @@ describe('a dog', () => {
 ### What should I know before making PRs for core changes?
 
 If you want to contribute to the core source code,
-the best way to get a feal for how the internals work,
-is to read over the jest tests that are in the same `src/lib` folder.
+the best way to get a feel for how the internals work,
+is to read over the Vitest tests that are in the same `src/lib` folder.
 Many of the internals are also exposed via named exports,
 so you can play around with individual components if you feel it would be helpful.
 

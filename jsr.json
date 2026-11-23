@@ -1,0 +1,10 @@
+{
+	"name": "@josh-hemphill/subslate",
+	"version": "2.0.0-beta.0",
+	"license": "MIT",
+	"exports": "./src/index.ts",
+	"publish": {
+		"include": ["LICENSE", "README.md", "src/**/*.ts"],
+		"exclude": ["src/**/*.test.ts", "src/**/test-utils.ts"]
+	}
+}

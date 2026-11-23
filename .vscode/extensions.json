@@ -1,6 +1,6 @@
 {
 	"recommendations": [
-		"dbaeumer.vscode-eslint",
+		"oxc.oxc-vscode",
 		"eamodio.gitlens",
 		"streetsidesoftware.code-spell-checker",
 		"davidanson.vscode-markdownlint"

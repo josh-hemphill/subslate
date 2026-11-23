@@ -1,21 +1,30 @@
-import type { ContextOptions, cacheObj, obj, separators } from './typing';
-import { escapeRegExp, isObj } from './utils';
+import type { ContextOptions, obj, separators } from './typing.ts';
+import { escapeRegExp, isObj } from './utils.ts';
 
 const isBlank = Symbol('Blank Value');
 export class Context {
-	context: obj;
-	constructor(context: obj){
+	context: object;
+	constructor(context: object) {
 		this.context = context;
 	}
-	getContextVal(item: cacheObj,separators: separators, options:ContextOptions):string {
-		const id = item.content;
+	getContextVal(id: string, separators: separators, options: ContextOptions): string {
 		const con = this.context;
-		const {allowRootBracket,allowUnquotedProps,sanitizer} =options;
-		const {per,opBracket,clBracket,quote,apostrophe,backtick} = separators;
-		const quotes = [quote,apostrophe,backtick].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
-		const nextSep = [per,opBracket].flat().filter(v => id?.includes(v)).map(v => escapeRegExp(v));
+		const { allowRootBracket, allowUnquotedProps, sanitizer } = options;
+		const { per, opBracket, clBracket, quote, apostrophe, backtick } = separators;
+		const quotes = [quote, apostrophe, backtick]
+			.flat()
+			.filter((v) => id?.includes(v))
+			.map((v) => escapeRegExp(v));
+		const nextSep = [per, opBracket]
+			.flat()
+			.filter((v) => id?.includes(v))
+			.map((v) => escapeRegExp(v));
 
-		function getRelative(funId: string, localContext: obj, startIndex = 0): [symbol|unknown,number]{
+		function getRelative(
+			funId: string,
+			localContext: obj,
+			startIndex = 0,
+		): [symbol | unknown, number] {
 			let result: unknown = isBlank;
 			let foundLength = 0;
 			const base = Object.keys(localContext);
@@ -23,7 +32,11 @@ export class Context {
 			function keysInId(newInd: number, prefix = '') {
 				for (const rootKey of base) {
 					const baseStr = prefix + rootKey;
-					if (RegExp(`^[\\s\\S]{${newInd}}(${escapeRegExp(baseStr)})(?:[${nextSep.join('')}]|$)`).test(funId)) {
+					if (
+						RegExp(
+							`^[\\s\\S]{${newInd}}(${escapeRegExp(baseStr)})(?:[${nextSep.join('')}]|$)`,
+						).test(funId)
+					) {
 						result = localContext[rootKey];
 						foundLength = baseStr.length;
 						return true;
@@ -38,24 +51,28 @@ export class Context {
 				}
 				if (startIndex !== 0) {
 					for (const period of per) {
-						if (keysInId(startIndex,period)) break FindRoot;
+						if (keysInId(startIndex, period)) break FindRoot;
 					}
 				}
 				if (startIndex !== 0 || allowRootBracket) {
-					const filteredBrackets = opBracket.map((v,i) => [v,clBracket[i]]).filter(v => funId.includes(v[0]) && funId.includes(v[1]));
-					let currentBrackets: [string,string] | null = null;
+					const filteredBrackets = opBracket
+						.map((v, i) => [v, clBracket[i]])
+						.filter((v) => funId.includes(v[0]) && funId.includes(v[1]));
+					let currentBrackets: [string, string] | null = null;
 					for (const [open, close] of filteredBrackets) {
-						if (funId.startsWith(open,startIndex)) {
+						if (funId.startsWith(open, startIndex)) {
 							currentBrackets = [open, close];
 							break;
 						}
 					}
 					if (currentBrackets === null) break FindRoot;
-					const [open, close] = currentBrackets.map(v => escapeRegExp(v));
-					for (const quote of [...quotes,...(allowUnquotedProps ? [''] : [])]) {
+					const [open, close] = currentBrackets.map((v) => escapeRegExp(v));
+					for (const quote of [...quotes, ...(allowUnquotedProps ? [''] : [])]) {
 						for (const rk of base) {
 							const rootKey = escapeRegExp(rk);
-							const getInnerReg = RegExp(`^[\\s\\S]{${startIndex}}(${open}\\s*${quote}(${rootKey})${quote}\\s*${close})`);
+							const getInnerReg = RegExp(
+								`^[\\s\\S]{${startIndex}}(${open}\\s*${quote}(${rootKey})${quote}\\s*${close})`,
+							);
 							getInnerReg.lastIndex = startIndex;
 							const match = getInnerReg.exec(id);
 							if (match && match[2]) {
@@ -67,15 +84,15 @@ export class Context {
 					}
 				}
 			}
-			return [result,foundLength];
+			return [result, foundLength];
 		}
 		let finResult: typeof isBlank | unknown = isBlank;
 
 		let curInd = 0;
-		for (;id?.length > curInd;) {
+		for (; id?.length > curInd;) {
 			const localContext: obj | unknown = finResult === isBlank ? con : finResult;
 			if (!isObj(localContext)) break;
-			const [newFinResult,foundLength] = getRelative(id,localContext,curInd);
+			const [newFinResult, foundLength] = getRelative(id, localContext, curInd);
 			if (foundLength === 0) break;
 			curInd += foundLength;
 			finResult = newFinResult;
@@ -98,4 +115,3 @@ export class Context {
 		return finResult;
 	}
 }
-
